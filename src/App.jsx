@@ -5,7 +5,7 @@ import { Library28Regular, Person28Filled, Stack24Regular, Edit20Regular, Attach
 
 function App() {
   const [prompt, setPrompt] = useState('');
-  const [IntelliNotes, setIntelliNotes] = useState('"Top Gun" is a 1986 American action drama film directed by Tony Scott and produced by Jerry Bruckheimer and Don Simpson. The movie stars Tom Cruise as Maverick, a young naval aviator who attends the Top Gun Naval Fighter Weapons School, where he competes to be the best fighter pilot.');
+
   const [isLoading, setIsLoading] = useState(false);
   const [isStartingPage, setIsStartingPage] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,11 +19,6 @@ function App() {
   const [topic, setTopic] = useState('');
   const [topicDescription, setTopicDescription] = useState('');
   const [subtopics, setSubtopics] = useState([])
-
-  const [subtopic, setSubtopic] = useState('Subtopic');
-  const [subtopicDescription, setSubtopicDescription] = useState('Body text for whatever you’d like to suggest. Add main takeaway points, quotes, anecdotes, or even a very very short story.');
-
-  const [subtopicDescriptions, setSubtopicDescriptions] = useState([])
 
   const [topicImage, setTopicImage] = useState('')
   const [topicImageDescription, setTopicImageDescription] = useState('')
@@ -145,8 +140,6 @@ function App() {
 
       setTopic(response.data.topic);
       setTopicDescription(response.data.description);
-      setSubtopic(response.data.subtopics[0].title);
-      setSubtopicDescription(response.data.subtopics[0].content);
       setSubtopics(response.data.subtopics);
       
       setTopicImageDescription(response.data.topic_image_search_prompt)
@@ -158,7 +151,6 @@ function App() {
         await fetchsubtopicImage(prompt);
       }
   
-      setIntelliNotes(response.data);
       fetchSidebarTopic();
 
       setPrompt('');
@@ -256,9 +248,7 @@ function App() {
 
 
             <div className='mainPageContentContainer'>
-              {IntelliNotes && (
                 <div className='IntelliNotesContainer'>
-
                   <div className='SectionOne'>
                     <div className='HeadingContainer'>
                       <h1 className='heading'>{topic}</h1>
@@ -277,7 +267,7 @@ function App() {
                         />
                       )}
                       {/* <img src='./TestImage.jpg' alt='firstImage' className='image' /> */}
-                      <p className='imageDescription'>Description of image</p>
+                      <p className='imageDescription'>{topicImageDescription}</p>
                     </div>
 
                     <div className='editSectionButtonContainer'>
@@ -289,65 +279,6 @@ function App() {
                       </button>
                     </div>
                   </div>
-
-                  {/* COMMENT OUT */}
-                  {/* <div className='SectionTwo'>          
-                    <div className='secondImageContainer'>
-                      <img
-                        src="./TestImage2.jpg"
-                        alt="secondImage"
-                        className='secondImage'
-                      />
-                      <h2 className='imageTitle'>Image title</h2>
-                      <p className='imageDescription'>Description of image</p>
-                    </div>
-
-                    <div className='subheadingContainer'>
-                      <h2 className='subheading'>{subtopic}</h2>
-                      <p className='subheadingDescription'>
-                        {subtopicDescription}
-                      </p>
-                    </div>                    
-                  </div>
-
-                  <div className='SectionOne'>
-                    <div className='HeadingContainer'>
-                      <h2 className='subheading'>{subtopic}</h2>
-                      <p className='subheadingDescription'>
-                        {subtopicDescription}
-                      </p>
-                    </div>
-
-                    <div className='firstImageContainer'>
-                      <img
-                        src="./TestImage3.jpg"
-                        alt="Project"
-                        className='image'
-                      />
-                      <h2 className='imageTitle'>Image title</h2>
-                      <p className='imageDescription'>Description of image</p>
-                    </div>
-                  </div>
-
-                  <div className='SectionTwo'>          
-                    <div className='secondImageContainer'>
-                      <img
-                        src="./TestImage2.jpg"
-                        alt="secondImage"
-                        className='secondImage'
-                      />
-                      <h2 className='imageTitle'>Image title</h2>
-                      <p className='imageDescription'>Description of image</p>
-                    </div>
-
-                    <div className='subheadingContainer'>
-                      <h2 className='subheading'>{subtopic}</h2>
-                      <p className='subheadingDescription'>
-                        {subtopicDescription}
-                      </p>
-                    </div>                    
-                  </div> */}
-                  {/* COMMENT OUT */}
 
                   {subtopics.map((subtopic, index) => (
                     index % 2 === 0 ? (
@@ -392,10 +323,7 @@ function App() {
                         </div>
                     )
                   ))}
-
                 </div>
-              )}
-
 
 
 
