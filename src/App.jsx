@@ -13,6 +13,7 @@ function App() {
   const [isImportURLMode, setIsImportURLMode] = useState(false);
 
   const [sidebarTitles, setSidebarTitles] = useState([]);
+  const [SidebarTitlesCorrespondingID, setSidebarTitlesCorrespondingID] = useState([]);
   const [currentlyOpenedNotesID, setCurrentlyOpenedNotesID] = useState(''); // store the mongoDB _id of the currently opened notes
 
   const [topic, setTopic] = useState('');
@@ -40,6 +41,10 @@ function App() {
       setSidebarTitles([])
       const newTitles = intelliNotesJSON.map(note => note.topic);
       setSidebarTitles(prevTitles => [...prevTitles, ...newTitles]);
+
+      setSidebarTitlesCorrespondingID([])
+      const newID = intelliNotesJSON.map(note => note._id);
+      setSidebarTitlesCorrespondingID(prevID => [...prevID, ...newID]);
 
       // default will open up the latest intelliNotes first
       const length = intelliNotesJSON.length;
@@ -190,6 +195,13 @@ function App() {
     // Process the file here, for example, you can read it using FileReader API
     console.log('Selected file:', file);
   };
+
+  // The oldest notes has an index of 0
+  const openClickedIntelliNotes = (index) => {
+    const id = SidebarTitlesCorrespondingID[index]
+    fetchIntelliNotesContent(id)
+    setCurrentlyOpenedNotesID(id)
+  }
   
 
   return (
@@ -229,7 +241,7 @@ function App() {
               <div className="sidebar">
                 <div className="sidebarTopic">
                   {sidebarTitles.map((sidebarTitle, index) => (
-                    <button className='sidebarButton' key={index}>{sidebarTitle}</button>
+                    <button className='sidebarButton' key={index} onClick={() => openClickedIntelliNotes(index)}>{sidebarTitle}</button>
                   ))}
                 </div>
               </div>
