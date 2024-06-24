@@ -20,10 +20,14 @@ function App() {
   const [topicDescription, setTopicDescription] = useState('');
   const [subtopics, setSubtopics] = useState([])
 
-  const [topicImage, setTopicImage] = useState('')
-  const [topicImageDescription, setTopicImageDescription] = useState('')
-  const [subtopicImages, setSubtopicImages] = useState([])
-  const [subtopicImageDescription, setSubtopicImageDescription] = useState([])
+  const [topicImage, setTopicImage] = useState('');
+  const [topicImageDescription, setTopicImageDescription] = useState('');
+  const [subtopicImages, setSubtopicImages] = useState([]);
+  const [subtopicImageDescription, setSubtopicImageDescription] = useState([]);
+
+  const [multipleChoiceQuestion, setMultipleChoiceQuestion] = useState("");
+  const [multipleChoiceOptions, setMultipleChoiceOptions] = useState([]);
+  const [multipleChoiceCorrectAnswer, setMultipleChoiceCorrectAnswer] = useState(0);
 
   useEffect(() => {
     fetchSidebarTopic()
@@ -49,16 +53,6 @@ function App() {
     }
   }
 
-  const addIntelliNotesToSidebar = (intelliNotesJSON) => {
-    setSidebarTitles([])
-    const newTitles = intelliNotesJSON.map(note => note.topic);
-    setSidebarTitles(prevTitles => [...prevTitles, ...newTitles]);
-
-    // default will open up the latest intelliNotes first
-    const length = intelliNotesJSON.length;
-    setCurrentlyOpenedNotesID(intelliNotesJSON[length-1]._id);
-  }
-
   useEffect(() => {
     fetchIntelliNotesContent(currentlyOpenedNotesID)
   }, [currentlyOpenedNotesID])
@@ -74,6 +68,10 @@ function App() {
         setTopic(notesContent[index].topic);
         setTopicDescription(notesContent[index].description);
         setSubtopics(notesContent[index].subtopics);
+
+        setMultipleChoiceQuestion(notesContent[index].multiple_choice_question);
+        setMultipleChoiceOptions(notesContent[index].multiple_choice_options);
+        setMultipleChoiceCorrectAnswer(notesContent[index].multiple_choice_correct_answer);
       } else {
         // console.log('Note not found');
       }
@@ -91,7 +89,16 @@ function App() {
       const response = await axios.get(
         `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&searchType=image&q=${imagePrompt}&num=1`
       );
-      setTopicImage(response.data.items[0]);
+
+      const topicImageData = response.data.items[0];
+
+      await axios.post('http://localhost:5000/storeTopicImage', {
+        topicImageData,
+        imagePrompt
+      });
+      console.log('topicImage successfully saved to database');
+
+      setTopicImage(topicImageData);
     } catch (error) {
       console.error("Error fetching the images:", error);
     }
@@ -141,6 +148,10 @@ function App() {
       setTopic(response.data.topic);
       setTopicDescription(response.data.description);
       setSubtopics(response.data.subtopics);
+
+      setMultipleChoiceQuestion(response.data.multiple_choice_question);
+      setMultipleChoiceOptions(response.data.multiple_choice_options);
+      setMultipleChoiceCorrectAnswer(response.data.multiple_choice_correct_answer);
       
       setTopicImageDescription(response.data.topic_image_search_prompt)
       fetchtopicImage(response.data.topic_image_search_prompt);
@@ -193,6 +204,26 @@ function App() {
     const id = SidebarTitlesCorrespondingID[index]
     fetchIntelliNotesContent(id)
     setCurrentlyOpenedNotesID(id)
+  }
+
+  const multipleChoiceOptionRefs = useRef([React.createRef(), React.createRef(), React.createRef(), React.createRef()]);
+
+  const showMultipleChoiceAnswer = (index) => {
+    if (index == multipleChoiceCorrectAnswer) {
+      if (multipleChoiceOptionRefs.current[index].current.style.backgroundColor === 'rgba(0, 0, 0, 0.043)') { // Due to here, specifically need me put in "style={{backgroundColor: "rgba(0, 0, 0, 0.043)"}}"" in order for this line to work
+        multipleChoiceOptionRefs.current[index].current.style.backgroundColor = '#33ed33';
+      } else {
+        multipleChoiceOptionRefs.current[index].current.style.backgroundColor = '#0000000b'
+      }
+      // console.log("You are correct")
+    } else {
+      if (multipleChoiceOptionRefs.current[index].current.style.backgroundColor === 'rgba(0, 0, 0, 0.043)') { // Due to here, specifically need me put in "style={{backgroundColor: "rgba(0, 0, 0, 0.043)"}}"" in order for this line to work
+        multipleChoiceOptionRefs.current[index].current.style.backgroundColor = '#f24a4a';
+      } else {
+        multipleChoiceOptionRefs.current[index].current.style.backgroundColor = '#0000000b'
+      }
+      // console.log("You are incorrect")
+    }
   }
   
 
@@ -323,6 +354,36 @@ function App() {
                         </div>
                     )
                   ))}
+
+                  <div className='multipleChoiceSection'>
+                    <div className='multipleChoiceQuestionContainer'>
+                      <h2 className='question'>{multipleChoiceQuestion}</h2>
+                      <p className='questionDescription'>
+                        description
+                      </p>
+                    </div>
+                    <div className='multipleChoiceAnswersContainer'>
+                      <button ref={multipleChoiceOptionRefs.current[0]} className='answerOptions' style={{backgroundColor: "rgba(0, 0, 0, 0.043)"}} onClick={() => showMultipleChoiceAnswer(0)}>{multipleChoiceOptions[0]}</button>
+                      <button ref={multipleChoiceOptionRefs.current[1]} className='answerOptions' style={{backgroundColor: "rgba(0, 0, 0, 0.043)"}} onClick={() => showMultipleChoiceAnswer(1)}>{multipleChoiceOptions[1]}</button>
+                      <button ref={multipleChoiceOptionRefs.current[2]} className='answerOptions' style={{backgroundColor: "rgba(0, 0, 0, 0.043)"}} onClick={() => showMultipleChoiceAnswer(2)}>{multipleChoiceOptions[2]}</button>
+                      <button ref={multipleChoiceOptionRefs.current[3]} className='answerOptions' style={{backgroundColor: "rgba(0, 0, 0, 0.043)"}} onClick={() => showMultipleChoiceAnswer(3)}>{multipleChoiceOptions[3]}</button>
+                    </div>
+                  </div>
+
+                  {/* <div className='longQuestionSection'>
+                    <div className='longQuestionContainer'>
+                      <h2 className='question'>Long Question</h2>
+                      <p className='questionDescription'>
+                        description
+                      </p>
+                    </div>
+
+                    <div className='longQuestionAnswersContainer'>
+                      <input className='longQuestionInput'></input>
+                      <button className='submitLongAnswerButton'>Submit</button>
+                    </div>
+                  </div> */}
+
                 </div>
 
 

@@ -181,13 +181,16 @@ body {
   overflow-y: auto;
 }
 
+
+
 .SectionOne {
   display: flex;
   flex-direction: row;
+  margin-bottom: 13px;
 }
 
 .HeadingContainer {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   margin-left: 30px;
   width: 350px;
 }
@@ -235,10 +238,11 @@ body {
   margin: 5;
 }
 
+
+
 .SectionTwo{
   display: flex;
   flex-direction: row;
-  margin-top: 23px;
   margin-bottom: 33px;
 }
 
@@ -268,6 +272,86 @@ body {
   color: gray;
 }
 
+.multipleChoiceSection {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 30px;
+}
+
+.multipleChoiceQuestionContainer {
+  margin-bottom: 40px;
+  margin-left: 35px;
+  width: 490px;
+  border: 2px dotted #b2b1b1;
+  border-radius: 8px;
+  margin-right: 10px;
+  height: 100%;
+}
+
+.question {
+  margin: 15px 10px 5px 10px;
+}
+
+.questionDescription {
+  color: gray;
+  margin-left: 10px;
+}
+
+.multipleChoiceAnswersContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.answerOptions {
+  padding: 10px 20px;
+  margin: 5px;
+  font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.044);
+  border: 1.2px solid rgba(0, 0, 0, 0.826);
+  border-radius: 8px;
+  cursor: pointer;
+  width: 205px;
+  height: 45px;
+}
+
+.longQuestionSection {
+  background-color: rgba(0, 0, 0, 0.044);
+  border-radius: 8px;
+}
+
+.longQuestionContainer {
+  width: 690px;
+  margin-left: 10px;
+  margin-top: 15px;
+  height: 100px;
+}
+
+.longQuestionAnswersContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.longQuestionInput {
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-right: 10px;
+  margin-left: 15px;
+  width: 400px;
+  height: 35px;
+}
+
+.submitLongAnswerButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: rgba(0, 0, 0, 0.044);
+  border: 1.5px dotted rgb(10, 192, 10);
+  border-radius: 8px;
+  cursor: pointer;
+  width: 115px;
+  height: 37px;
+}
 
 
 .sidebarContainer {

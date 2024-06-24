@@ -23,6 +23,23 @@ mongoDBConnectionString = os.getenv('MONGODB_CONNECTION_STRING')
 client = MongoClient(mongoDBConnectionString)
 db = client['intelliLearn']
 
+@app.route('/storeTopicImage', methods=['POST'])
+def storeTopicImage():
+    data = request.get_json()
+    if not data or 'topicImageData' not in data or 'imagePrompt' not in data:
+        return jsonify({"error": "Missing topic image data or image prompt"}), 400
+
+    topic_image_data = data['topicImageData']
+    image_prompt = data['imagePrompt']
+
+    new_topic_image_entry = {
+        "topic_image": topic_image_data
+    }
+
+    collection = db['intelliNotes']
+    collection.insert_one(new_topic_image_entry)
+    return jsonify({"message": "Topic image data stored successfully"}), 201
+
 @app.route('/getIntelliNotes', methods=['GET'])
 def getIntelliNotes():
     collection = db['intelliNotes']
@@ -45,6 +62,38 @@ def generateIntelliNotes():
 
     if not prompt:
         return jsonify({'error': 'Prompt is required'}), 400
+    
+    prompt_to_ai = """\
+    You specialize in writing wiki-like learning materials. You are designed to output JSON.
+    When you are given a topic, generate the wiki-like learning materials.
+    First, generate the topic of the learning materials and the associated description of the topic.
+    Second, generate the subtopics and each of the content within the subtopics.
+    For now, only generate two subtopics first.
+    In addition, I want to have some accompanying images, thus, generate the Google search prompt for the desired images for both the topic and the subtopics,
+    remember to be specific in the prompts and target getting high quality, clear (best to be 4k) and accurate image that can reflect what is on the learning material.
+    Lastly, strictly based on the content of the learning materials that you generated, also generate a multiple choice question with 4 options and the correct answer.
+    Return the JSON in this format:
+    {
+    "topic": "xxx",
+    "description": "xxx",
+    "topic_image_search_prompt": "xxx",
+    "subtopics": [
+        {
+        "title": "xxx",
+        "content": "xxx"
+        },
+        {
+        "title": "xxx",
+        "content": "xxx"
+        }
+    ],
+    "subtopic_image_search_prompts": ["xxx", "xxx"],
+    "multiple_choice_question": "xxx",
+    "multiple_choice_options": ["xxx", "xxx"],
+    "multiple_choice_correct_answer": "index from the multiple_choice_options array"
+    }
+    Each element in the subtopic_image_search_prompts array respectively corresponds to the subtopic in the subtopics array.
+    But remember, if you are given an academic question, you must include the solutions in the learning material too."""
 
     try:
         client = openai.OpenAI()
@@ -55,7 +104,7 @@ def generateIntelliNotes():
         messages=[
             {
                 "role": "system",
-                "content": "You specialize in writing wiki-like learning materials. You are designed to output JSON. When you are given a topic, generate the wiki-like learning materials. First, generate the topic of the learning materials and the associated description of the topic. Second, generate the subtopics and each of the content within the subtopics. For now, only generate two subtopics first. In addition, I want to have some accompanying images, thus, generate the Google search prompt for the desired images for both the topic and the subtopics, remember to be specific in the prompts and target getting high quality, clear (best to be 4k) and accurate image that can reflecte what is on the learning material. Return the JSON in this format: {\"topic\": \"xxx\", \"description\": \"xxx\", \"topic_image_search_prompt\": \"xxx\", \"subtopics\": [{\"title\": \"xxx\", \"content\": \"xxx\"}, {\"title\": \"xxx\", \"content\": \"xxx\"}], \"subtopic_image_search_prompts\": [\"xxx\"]} Each element in the subtopic_image_search_prompts array respectively corresponds to the subtopic in the subtopics array. But rmb, if you are given an academic question, you must include the solutions in the learning material too"
+                "content": prompt_to_ai
             },
             {"role": "user", "content": prompt}
         ]
@@ -70,7 +119,10 @@ def generateIntelliNotes():
             "description": generated_text["description"],
             "topic_image_search_prompt": generated_text["topic_image_search_prompt"],
             "subtopics": generated_text["subtopics"],
-            "subtopic_image_search_prompts": generated_text["subtopic_image_search_prompts"]
+            "subtopic_image_search_prompts": generated_text["subtopic_image_search_prompts"],
+            "multiple_choice_question": generated_text["multiple_choice_question"],
+            "multiple_choice_options": generated_text["multiple_choice_options"],
+            "multiple_choice_correct_answer": generated_text["multiple_choice_correct_answer"]
         }
 
         # Store JSON output from gpt to mongodb database
