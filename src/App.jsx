@@ -293,7 +293,7 @@ function App() {
 
             <div className='mainPageContentContainer'>
                 <div className='IntelliNotesContainer'>
-                  <div className='SectionOne'>
+                  <div className='TopicSection'>
                     <div className='HeadingContainer'>
                       <h1 className='heading'>{topic}</h1>
                       <p className='headingDescription'>

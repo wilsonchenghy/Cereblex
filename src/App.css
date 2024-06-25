@@ -183,10 +183,17 @@ body {
 
 
 
+.TopicSection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 13px;
+}
+
 .SectionOne {
   display: flex;
   flex-direction: row;
-  margin-bottom: 13px;
+  margin-bottom: 43px;
 }
 
 .HeadingContainer {
@@ -432,7 +439,8 @@ body {
 .editSectionButtonContainer {
   display: flex;
   flex-direction: column-reverse;
-  margin-left: 12px;
+  margin-left: 20px;
+  height: 80%;
 }
 
 .editSectionButton {
