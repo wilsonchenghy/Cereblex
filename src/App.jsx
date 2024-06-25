@@ -72,6 +72,12 @@ function App() {
         setMultipleChoiceQuestion(notesContent[index].multiple_choice_question);
         setMultipleChoiceOptions(notesContent[index].multiple_choice_options);
         setMultipleChoiceCorrectAnswer(notesContent[index].multiple_choice_correct_answer);
+
+        setTopicImage(notesContent[index].topic_image)
+        setTopicImageDescription(notesContent[index].topic_image_search_prompt)
+
+        setSubtopicImages(notesContent[index].subtopic_images)
+        setSubtopicImageDescription(notesContent[index].subtopic_image_search_prompts)
       } else {
         // console.log('Note not found');
       }
@@ -81,7 +87,7 @@ function App() {
     }
   }
 
-  const fetchtopicImage = async(imagePrompt) => {
+  const fetchtopicImage = async(imagePrompt, associatedID) => {
     const API_KEY = import.meta.env.VITE_GOGGLE_API_KEY;
     const SEARCH_ENGINE_ID = import.meta.env.VITE_GOGGLE_SEARCH_ENGINE_ID;;
 
@@ -92,9 +98,9 @@ function App() {
 
       const topicImageData = response.data.items[0];
 
-      await axios.post('http://localhost:5000/storeTopicImage', {
+      await axios.post('http://localhost:5001/storeTopicImage', {
         topicImageData,
-        imagePrompt
+        associatedID
       });
       console.log('topicImage successfully saved to database');
 
@@ -104,7 +110,7 @@ function App() {
     }
   }
 
-  const fetchsubtopicImage = async(imagePrompt) => {
+  const fetchsubtopicImage = async(imagePrompt, associatedID) => {
     const API_KEY = import.meta.env.VITE_GOGGLE_API_KEY;
     const SEARCH_ENGINE_ID = import.meta.env.VITE_GOGGLE_SEARCH_ENGINE_ID;;
 
@@ -112,11 +118,16 @@ function App() {
       const response = await axios.get(
         `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&searchType=image&q=${imagePrompt}&num=1`
       );
-      setSubtopicImages((prevImages) => [...prevImages, response.data.items[0]]);
-      console.log(response.data.items[0]);
 
-      console.log(imagePrompt)
-      console.log("here")
+      const subtopicImagesData = response.data.items[0];
+
+      await axios.post('http://localhost:5001/storeSubtopicImages', {
+        subtopicImagesData,
+        associatedID
+      });
+      console.log('topicImage successfully saved to database');
+
+      setSubtopicImages((prevImages) => [...prevImages, subtopicImagesData]);
     } catch (error) {
       console.error("Error fetching the images:", error);
     }
@@ -133,7 +144,6 @@ function App() {
   const handleSubmit = (e) => {
     setIsLoading(true);
     e.preventDefault();
-    console.log("Submitted value:", prompt);
     if (isImportURLMode) {
       generateIntelliNotesFromYouTube(prompt)
     } else {
@@ -145,21 +155,24 @@ function App() {
     try {
       const response = await axios.post('http://localhost:5001/generateIntelliNotes', { prompt });
 
-      setTopic(response.data.topic);
-      setTopicDescription(response.data.description);
-      setSubtopics(response.data.subtopics);
 
-      setMultipleChoiceQuestion(response.data.multiple_choice_question);
-      setMultipleChoiceOptions(response.data.multiple_choice_options);
-      setMultipleChoiceCorrectAnswer(response.data.multiple_choice_correct_answer);
-      
-      setTopicImageDescription(response.data.topic_image_search_prompt)
-      fetchtopicImage(response.data.topic_image_search_prompt);
-  
-      setSubtopicImageDescription(response.data.subtopic_image_search_prompts)
-      for (const prompt of response.data.subtopic_image_search_prompts) {
-        console.log(prompt);
-        await fetchsubtopicImage(prompt);
+      const generatedText = response.data.generated_text;
+      const newEntryId = response.data.new_entry_id;
+
+      setTopic(generatedText.topic);
+      setTopicDescription(generatedText.description);
+      setSubtopics(generatedText.subtopics);
+
+      setMultipleChoiceQuestion(generatedText.multiple_choice_question);
+      setMultipleChoiceOptions(generatedText.multiple_choice_options);
+      setMultipleChoiceCorrectAnswer(generatedText.multiple_choice_correct_answer);
+
+      setTopicImageDescription(generatedText.topic_image_search_prompt);
+      await fetchtopicImage(generatedText.topic_image_search_prompt, newEntryId);
+
+      setSubtopicImageDescription(generatedText.subtopic_image_search_prompts);
+      for (const prompt of generatedText.subtopic_image_search_prompts) {
+        await fetchsubtopicImage(prompt, newEntryId);
       }
   
       fetchSidebarTopic();

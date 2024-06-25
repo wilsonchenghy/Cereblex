@@ -276,6 +276,7 @@ body {
   display: flex;
   flex-direction: row;
   margin-bottom: 30px;
+  margin-top: 10px;
 }
 
 .multipleChoiceQuestionContainer {

@@ -12,6 +12,7 @@ import openai
 import os
 from pymongo import MongoClient
 import json
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 CORS(app)
@@ -23,22 +24,64 @@ mongoDBConnectionString = os.getenv('MONGODB_CONNECTION_STRING')
 client = MongoClient(mongoDBConnectionString)
 db = client['intelliLearn']
 
+
+
 @app.route('/storeTopicImage', methods=['POST'])
 def storeTopicImage():
     data = request.get_json()
-    if not data or 'topicImageData' not in data or 'imagePrompt' not in data:
-        return jsonify({"error": "Missing topic image data or image prompt"}), 400
+    if not data or 'topicImageData' not in data or 'associatedID' not in data:
+        return jsonify({"error": "Missing topic image data or associated ID"}), 400
 
     topic_image_data = data['topicImageData']
-    image_prompt = data['imagePrompt']
+    associated_id = data['associatedID']
 
-    new_topic_image_entry = {
-        "topic_image": topic_image_data
-    }
+    try:
+        collection = db['intelliNotes']
+        result = collection.update_one(
+            {'_id': ObjectId(associated_id)},
+            {'$set': {'topic_image': topic_image_data}}
+        )
 
-    collection = db['intelliNotes']
-    collection.insert_one(new_topic_image_entry)
-    return jsonify({"message": "Topic image data stored successfully"}), 201
+        if result.matched_count > 0:
+            return jsonify({"message": "Topic image data stored successfully"}), 201
+        else:
+            return jsonify({"error": "No document found with the given ID"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+@app.route('/storeSubtopicImages', methods=['POST'])
+def storeSubtopicImages():
+    data = request.get_json()
+    if not data or 'subtopicImagesData' not in data or 'associatedID' not in data:
+        return jsonify({"error": "Missing subtopic images data or associated ID"}), 400
+
+    subtopic_images_data = data['subtopicImagesData']
+    associated_id = data['associatedID']
+
+    try:
+        collection = db['intelliNotes']
+
+        document = collection.find_one({'_id': ObjectId(associated_id)})
+        if not document:
+            return jsonify({"error": "No document found with the given ID"}), 404
+        
+        current_subtopic_images = document.get('subtopic_images', [])
+
+        updated_subtopic_images = current_subtopic_images + [subtopic_images_data]
+
+        result = collection.update_one(
+            {'_id': ObjectId(associated_id)},
+            {'$set': {'subtopic_images': updated_subtopic_images}}
+        )
+
+        if result.matched_count > 0:
+            return jsonify({"message": "Subtopic images data stored successfully"}), 201
+        else:
+            return jsonify({"error": "No document found with the given ID"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 
 @app.route('/getIntelliNotes', methods=['GET'])
 def getIntelliNotes():
@@ -52,8 +95,8 @@ def getIntelliNotes():
 
 def addNewEntryToDB(newJSONEntry):
     collection = db['intelliNotes']
-    collection.insert_one(newJSONEntry)
-    return jsonify(message='Data stored successfully')
+    newly_stored_entry = collection.insert_one(newJSONEntry)
+    return newly_stored_entry.inserted_id
 
 @app.route('/generateIntelliNotes', methods=['POST'])
 def generateIntelliNotes():
@@ -126,9 +169,16 @@ def generateIntelliNotes():
         }
 
         # Store JSON output from gpt to mongodb database
-        addNewEntryToDB(newEntry)
+        new_entry_id = addNewEntryToDB(newEntry)
+        new_entry_id = str(new_entry_id)
 
-        return generated_text
+        result = {
+            "generated_text": generated_text,
+            "new_entry_id": new_entry_id
+        }
+
+        return jsonify(result), 200
+    
     except Exception as e:
         print(e)
         return jsonify({'error': str(e)}), 500
