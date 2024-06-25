@@ -107,11 +107,13 @@ def generateIntelliNotes():
         return jsonify({'error': 'Prompt is required'}), 400
     
     prompt_to_ai = """\
-    You specialize in writing wiki-like learning materials. You are designed to output JSON.
-    When you are given a topic, generate the wiki-like learning materials.
+    You specialize in writing wiki-like learning materials by following "First principles thinking". You are designed to output JSON.
+    "First principles thinking" consists of decomposing things down to the fundamental axioms in the given arena, before reasoning up by asking which ones are relevant to the question at hand, then cross referencing conclusions based on chosen axioms and making sure conclusions do not violate any fundamental laws.
+    When you are given a topic, generate the wiki-like learning materials with the technique of "First principles thinking".
+    For more academic related questions, you may have to layout some fundamental axioms too in order to achieve a good "First principles thinking".
     First, generate the topic of the learning materials and the associated description of the topic.
     Second, generate the subtopics and each of the content within the subtopics.
-    For now, only generate two subtopics first.
+    Generate as many subtopic as you want as long as it efficiently covers the topic.
     In addition, I want to have some accompanying images, thus, generate the Google search prompt for the desired images for both the topic and the subtopics,
     remember to be specific in the prompts and target getting high quality, clear (best to be 4k) and accurate image that can reflect what is on the learning material.
     Lastly, strictly based on the content of the learning materials that you generated, also generate a multiple choice question with 4 options and the correct answer.
@@ -133,7 +135,7 @@ def generateIntelliNotes():
     "subtopic_image_search_prompts": ["xxx", "xxx"],
     "multiple_choice_question": "xxx",
     "multiple_choice_options": ["xxx", "xxx"],
-    "multiple_choice_correct_answer": "index from the multiple_choice_options array"
+    "multiple_choice_correct_answer": "here remember to return the index from the multiple_choice_options array"
     }
     Each element in the subtopic_image_search_prompts array respectively corresponds to the subtopic in the subtopics array.
     But remember, if you are given an academic question, you must include the solutions in the learning material too."""
