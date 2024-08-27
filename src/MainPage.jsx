@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './css/App.css';
 import axios from 'axios';
-import { Library28Regular, Edit20Regular, Attach24Filled, Document20Regular, Link20Filled, ClipboardLink24Filled } from '@fluentui/react-icons';
+import { Edit20Regular, Attach24Filled, Document20Regular, Link20Filled, ClipboardLink24Filled } from '@fluentui/react-icons';
 import StartingPage from './StartingPage';
 import LoadingScreen from './LoadingScreen';
 import UserTab from './UserTab';
@@ -141,6 +141,10 @@ function MainPage() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const addNewNotes = () => {
+    setIsStartingPage(true);
+  };
+
   const handleChange = (e) => {
     setPrompt(e.target.value);
   };
@@ -251,7 +255,7 @@ function MainPage() {
 
       <div className='mainPageContainer'>
 
-        <SideBar isSidebarOpen={isSidebarOpen} sidebarTitles={sidebarTitles} openClickedIntelliNotes={openClickedIntelliNotes} toggleSidebar={toggleSidebar}/>
+        <SideBar isSidebarOpen={isSidebarOpen} sidebarTitles={sidebarTitles} openClickedIntelliNotes={openClickedIntelliNotes} toggleSidebar={toggleSidebar} addNewNotes={addNewNotes}/>
 
         {isLoading ? (
           <LoadingScreen />

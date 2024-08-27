@@ -8,7 +8,7 @@
 }
   
 .sidebar {
-    width: 220px;
+    width: 250px;
     background-color: #FAFAFA;
     color: black;
     position: fixed;
@@ -31,17 +31,26 @@
     background-color: transparent;
     position: relative;
 }
+
+.sidebarAddNewNotesButton {
+    margin: 20px;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+    margin-left: 198px;
+    margin-top: 23px;
+}
   
 .sidebarTopic {
     display: flex;
     flex-direction: column;
-    margin-top: 80px;
+    margin-top: 7px;
     align-items: center;
 }
   
 .sidebarButton {
     padding: 10px 20px;
-    font-size: 12px;
+    font-size: 13.5px;
     color: black;
     background-color: #EEEEEE;
     border: none;
