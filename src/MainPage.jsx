@@ -5,7 +5,7 @@ import { Edit20Regular, Attach24Filled, Document20Regular, Link20Filled, Clipboa
 import StartingPage from './StartingPage';
 import LoadingScreen from './LoadingScreen';
 import UserTab from './UserTab';
-import SideBar from './SideBar';
+import  Sidebar from './Sidebar';
 
 function MainPage() {
   const [prompt, setPrompt] = useState('');
@@ -255,7 +255,7 @@ function MainPage() {
 
       <div className='mainPageContainer'>
 
-        <SideBar isSidebarOpen={isSidebarOpen} sidebarTitles={sidebarTitles} openClickedIntelliNotes={openClickedIntelliNotes} toggleSidebar={toggleSidebar} addNewNotes={addNewNotes}/>
+        <Sidebar isSidebarOpen={isSidebarOpen} sidebarTitles={sidebarTitles} openClickedIntelliNotes={openClickedIntelliNotes} toggleSidebar={toggleSidebar} addNewNotes={addNewNotes}/>
 
         {isLoading ? (
           <LoadingScreen />
@@ -374,35 +374,37 @@ function MainPage() {
 
 
 
-              {isAttachMenuOpen && <div className='attachMenu'>
-                <div className='attachFileButtonContainer'>
-                  <input
-                      type="file"
-                      style={{ display: 'none' }}
-                      ref={fileInputRef}
-                      onChange={handleFileChange}
-                    />
-                  <button type='submit' className='attachFileButton' style={{display: 'flex', alignItems: 'center'}} onClick={attachFile}>
-                    <Document20Regular style={{paddingRight: '5px'}}/>
-                    Attach File
-                  </button>
-                </div>
+              {isAttachMenuOpen && 
+                <div className='attachMenu'>
+                  <div className='attachFileButtonContainer'>
+                    <input
+                        type="file"
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                      />
+                    <button type='submit' className='attachFileButton' style={{display: 'flex', alignItems: 'center'}} onClick={attachFile}>
+                      <Document20Regular style={{paddingRight: '5px'}}/>
+                      Attach File
+                    </button>
+                  </div>
 
-                <div className='attachLinkButtonContainer'>
-                  <button 
-                    type='submit' 
-                    className='attachLinkButton' 
-                    style={{display: 'flex', alignItems: 'center'}}
-                    onClick={() => {
-                      setIsImportURLMode(true)
-                      setIsAttachMenuOpen(false)
-                    }}
-                  >
-                    <Link20Filled style={{paddingRight: '5px'}}/>
-                    Import URL
-                  </button>
+                  <div className='attachLinkButtonContainer'>
+                    <button 
+                      type='submit' 
+                      className='attachLinkButton' 
+                      style={{display: 'flex', alignItems: 'center'}}
+                      onClick={() => {
+                        setIsImportURLMode(true)
+                        setIsAttachMenuOpen(false)
+                      }}
+                    >
+                      <Link20Filled style={{paddingRight: '5px'}}/>
+                      Import URL
+                    </button>
+                  </div>
                 </div>
-              </div>}
+              }
 
               <div className='mainPageForm'>
                 <div>                  

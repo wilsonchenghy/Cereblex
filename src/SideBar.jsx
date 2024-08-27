@@ -1,8 +1,8 @@
 import React from 'react'
-import './css/SideBar.css';
-import { Library28Regular, AddSquare24Regular } from '@fluentui/react-icons';
+import './css/Sidebar.css';
+import { Library28Regular, AddSquare24Regular, MoreVertical20Regular } from '@fluentui/react-icons';
 
-const SideBar = ({ isSidebarOpen, sidebarTitles, openClickedIntelliNotes, toggleSidebar, addNewNotes }) => {
+const Sidebar = ({ isSidebarOpen, sidebarTitles, openClickedIntelliNotes, toggleSidebar, addNewNotes, openSidebarItemsOptions }) => {
   return (
     <div className={`sidebarContainer ${isSidebarOpen ? 'sidebar-open' : ''}`}>
         <div className="sidebar">
@@ -12,7 +12,12 @@ const SideBar = ({ isSidebarOpen, sidebarTitles, openClickedIntelliNotes, toggle
 
           <div className="sidebarTopic">
             {sidebarTitles.map((sidebarTitle, index) => (
-            <button className='sidebarButton' key={index} onClick={() => openClickedIntelliNotes(index)}>{sidebarTitle}</button>
+              <div className='sidebarItem' key={index}>
+                <button className='sidebarButton' onClick={() => openClickedIntelliNotes(index)}>{sidebarTitle}</button>
+                <button className="sidebarOptionButton" onClick={() => openSidebarItemsOptions(index)}>
+                  <MoreVertical20Regular/>
+                </button>
+              </div>
             ))}
           </div>
         </div>
@@ -24,4 +29,4 @@ const SideBar = ({ isSidebarOpen, sidebarTitles, openClickedIntelliNotes, toggle
   );
 }
 
-export default SideBar;
+export default Sidebar;

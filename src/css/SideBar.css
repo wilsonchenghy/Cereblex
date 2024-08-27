@@ -47,9 +47,15 @@
     margin-top: 7px;
     align-items: center;
 }
+
+.sidebarItem {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
   
 .sidebarButton {
-    padding: 10px 20px;
+    padding: 13px 20px;
     font-size: 13.5px;
     color: black;
     background-color: #EEEEEE;
@@ -58,4 +64,19 @@
     cursor: pointer;
     width: 90%;
     margin-bottom: 7px;
+    margin-left: 5%;
+}
+
+.sidebarOptionButton {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    margin-bottom: 3px;
+}
+
+.sidebarItem:hover .sidebarOptionButton {
+    display: block;
 }
