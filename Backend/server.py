@@ -217,3 +217,8 @@ def generateIntelliNotesFromYouTube():
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
+
+
+
+# Run 'brew services start mongodb-community' in terminal to activate the mongodb shell
+# Check with 'brew services list' on if the mongosh is successfully started
