@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import './css/App.css';
 import axios from 'axios';
 import { Library28Regular, Edit20Regular, Attach24Filled, Document20Regular, Link20Filled, ClipboardLink24Filled } from '@fluentui/react-icons';
+import StartingPage from './StartingPage';
+import LoadingScreen from './LoadingScreen';
 import UserTab from './UserTab';
 import SideBar from './SideBar';
 
@@ -9,7 +11,7 @@ function MainPage() {
   const [prompt, setPrompt] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isStartingPage, setIsStartingPage] = useState(false);
+  const [isStartingPage, setIsStartingPage] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isAttachMenuOpen, setIsAttachMenuOpen] = useState(false);
   const [isImportURLMode, setIsImportURLMode] = useState(false);
@@ -219,6 +221,8 @@ function MainPage() {
     const id = SidebarTitlesCorrespondingID[index]
     fetchIntelliNotesContent(id)
     setCurrentlyOpenedNotesID(id)
+    setIsLoading(false)
+    setIsStartingPage(false)
   }
 
   const multipleChoiceOptionRefs = useRef([React.createRef(), React.createRef(), React.createRef(), React.createRef()]);
@@ -243,39 +247,18 @@ function MainPage() {
   
 
   return (
-
-
-
     <div className="container">
 
-      {isLoading ? (
-        <div className="loading-screen">
-          <p>Loading ... ✨💫</p>
-        </div>
-        
-      ) : (
+      <div className='mainPageContainer'>
 
-        isStartingPage ? (
-          <div className="startingPageContainer">
-            <p className="title">Start Generating ... ✨✨</p>
-            <form className="form" onSubmit={handleSubmit}>
-              <input
-                type="text"
-                className="input"
-                placeholder="Topic"
-                value={prompt}
-                onChange={handleChange}
-              />
-              <button type="submit" className="submit-button">Submit</button>
-            </form>
-          </div>
+        <SideBar isSidebarOpen={isSidebarOpen} sidebarTitles={sidebarTitles} openClickedIntelliNotes={openClickedIntelliNotes} toggleSidebar={toggleSidebar}/>
 
+        {isLoading ? (
+          <LoadingScreen />
         ) : (
-
-          <div className='mainPageContainer'>
-
-            <SideBar isSidebarOpen={isSidebarOpen} sidebarTitles={sidebarTitles} openClickedIntelliNotes={openClickedIntelliNotes} toggleSidebar={toggleSidebar}/>
-
+          isStartingPage ? (
+            <StartingPage prompt={prompt} handleChange={handleChange} handleSubmit={handleSubmit}/>
+          ) : (
             <div className='mainPageContentContainer'>
                 <div className='IntelliNotesContainer'>
                   <div className='TopicSection'>
@@ -444,13 +427,11 @@ function MainPage() {
                 </form>
               </div>
             </div>
+          )
+        )}
 
-            <UserTab isSidebarOpen={isSidebarOpen}/>
-
-          </div>
-        )
-      )}
-
+        <UserTab isSidebarOpen={isSidebarOpen}/>
+      </div>
     </div>
   );
 }
