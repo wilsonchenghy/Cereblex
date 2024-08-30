@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PptxGenJS from "pptxgenjs";
 import { Rnd } from "react-rnd";
 import "./css/PptPage.css";
@@ -64,6 +64,8 @@ const PptPage = () => {
             <h4 className="thumbnail-title">{slide.title}</h4>
             <p className="thumbnail-subtitle">{slide.subtitle}</p>
         </div>
+
+        
     );
 
     return (
@@ -94,41 +96,48 @@ const PptPage = () => {
             </div>
             <div className="slide-editor">
                 <div className="slide">
-                    <input
-                        className="title-box"
-                        type="text"
-                        value={slides[currentSlide - 1].title}
-                        onChange={handleTitleChange}
-                    />
-                    <input
-                        className="subtitle-box"
-                        type="text"
-                        value={slides[currentSlide - 1].subtitle}
-                        onChange={handleSubtitleChange}
-                    />
-                </div>
-                {/* <div className="slide-1">
                     <Rnd
                         className="draggableBlock"
                         default={{
-                            x: 0,
-                            y: 0,
-                            width: 320,
-                            height: 200,
+                            x: 530-680/2,
+                            y: 298.5-100/2 - 50,
+                            width: 680,
+                            height: 100,
                         }}
-                        minWidth={100}
-                        minHeight={100}
+                        minWidth={50}
+                        minHeight={50}
                         bounds="parent"
                         enableUserSelectHack={false}
                     >
                         <input
-                            className="title-box-1"
+                            className="title-box"
                             type="text"
                             value={slides[currentSlide - 1].title}
                             onChange={handleTitleChange}
                         />
-                    </Rnd>                    
-                </div> */}
+                    </Rnd>
+
+                    <Rnd
+                        className="draggableBlock"
+                        default={{
+                            x: 530-680/2,
+                            y: 298.5-60/2 + 33,
+                            width: 680,
+                            height: 60,
+                        }}
+                        minWidth={50}
+                        minHeight={50}
+                        bounds="parent"
+                        enableUserSelectHack={false}
+                    >
+                        <input
+                            className="subtitle-box"
+                            type="text"
+                            value={slides[currentSlide - 1].subtitle}
+                            onChange={handleSubtitleChange}
+                        />
+                    </Rnd> 
+                </div>
             </div>
         </div>
     </div>
