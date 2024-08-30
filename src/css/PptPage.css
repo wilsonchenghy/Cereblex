@@ -3,7 +3,7 @@
 }
 
 .control-panel {
-  height: 5vh;
+  height: 5%;
   border-bottom: 1px solid #ddd;
   padding: 1px;
   display: flex;
@@ -25,7 +25,7 @@
 .ppt-container {
   display: flex;
   width: 100vw;
-  height: 95vh;
+  height: 95%;
 }
 
 .slide-thumbnails-column {
@@ -87,21 +87,49 @@
   width: 70%;
   height: 100%;
   flex-grow: 1;
-  padding: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
   
 .slide {
-  width: 100%;
-  height: 100%;
+  width: 90%;
+  height: 90%;
   border: 1px solid #ccc;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #fff;
+}
+
+.slide-1 {
+  /* width and height follows a ppt 16:9 aspect ratio */
+  width: 90%;
+  padding-top: 50.625%; /* (9/16)*width-percentage(i.e. 90) */
+
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+
+.draggableBlock {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: solid 1px #ddd;
+  background: #f0f0f0;
+}
+
+.title-box-1 {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  font-size: 27px;
+  text-align: center;
 }
   
 .title-box {

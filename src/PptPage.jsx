@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import PptxGenJS from "pptxgenjs";
+import { Rnd } from "react-rnd";
 import "./css/PptPage.css";
 
 const PptPage = () => {
@@ -106,6 +107,28 @@ const PptPage = () => {
                         onChange={handleSubtitleChange}
                     />
                 </div>
+                {/* <div className="slide-1">
+                    <Rnd
+                        className="draggableBlock"
+                        default={{
+                            x: 0,
+                            y: 0,
+                            width: 320,
+                            height: 200,
+                        }}
+                        minWidth={100}
+                        minHeight={100}
+                        bounds="parent"
+                        enableUserSelectHack={false}
+                    >
+                        <input
+                            className="title-box-1"
+                            type="text"
+                            value={slides[currentSlide - 1].title}
+                            onChange={handleTitleChange}
+                        />
+                    </Rnd>                    
+                </div> */}
             </div>
         </div>
     </div>
