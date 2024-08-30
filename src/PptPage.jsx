@@ -59,13 +59,55 @@ const PptPage = () => {
         console.log("Exported successfully");
     };
 
-    const renderPreview = (slide) => (
-        <div className="thumbnail-preview">
-            <h4 className="thumbnail-title">{slide.title}</h4>
-            <p className="thumbnail-subtitle">{slide.subtitle}</p>
-        </div>
+    const [titlePosition, setTitlePosition] = useState({x: 530-680/2, y: 298.5-100/2 - 50});
+    // const [titleSize, setTitleSize] = useState()
+    const [subtitlePosition, setSubtitlePosition] = useState({x: 530-680/2, y: 298.5-60/2 + 33})
 
-        
+    const renderPreview = (slide) => (
+        // <div className="thumbnail-preview">
+        //     <h4 className="thumbnail-title">{slide.title}</h4>
+        //     <p className="thumbnail-subtitle">{slide.subtitle}</p>
+        // </div>
+
+        <div className="slide">
+            <Rnd
+                className="draggableBlock"
+                default={{
+                    width: 50,
+                    height: 20,
+                }}
+                position={{x: titlePosition.x / 5, y: titlePosition.y / 5}}
+                bounds="parent"
+                disableDragging={true}
+                enableResizing={false}
+            >
+                <input
+                    className="title-box"
+                    type="text"
+                    value={slides[currentSlide - 1].title}
+                    onChange={handleTitleChange}
+                />
+            </Rnd>
+
+            <Rnd
+                className="draggableBlock"
+                default={{
+                    width: 50,
+                    height: 20,
+                }}
+                position={{x: subtitlePosition.x / 5, y: subtitlePosition.y / 5}}
+                bounds="parent"
+                disableDragging={true}
+                enableResizing={false}
+            >
+                <input
+                    className="subtitle-box"
+                    type="text"
+                    value={slides[currentSlide - 1].subtitle}
+                    onChange={handleSubtitleChange}
+                />
+            </Rnd> 
+        </div>
     );
 
     return (
@@ -108,6 +150,7 @@ const PptPage = () => {
                         minHeight={50}
                         bounds="parent"
                         enableUserSelectHack={false}
+                        onDragStop={(e, d) => {setTitlePosition({x: d.x, y:d.y})}}
                     >
                         <input
                             className="title-box"
@@ -129,6 +172,7 @@ const PptPage = () => {
                         minHeight={50}
                         bounds="parent"
                         enableUserSelectHack={false}
+                        onDragStop={(e, d) => {setSubtitlePosition({x: d.x, y:d.y})}}
                     >
                         <input
                             className="subtitle-box"
