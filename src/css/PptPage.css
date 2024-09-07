@@ -29,7 +29,7 @@
 }
 
 .slide-thumbnails-column {
-  width: 18%;
+  width: 19%;
   height: 100%;
   border-right: 1px solid #ddd;
   display: flex;
@@ -45,26 +45,37 @@
 
 .slide-thumbnail-number {
   margin-bottom: 80px;
-  margin-right: 10px;
-  margin-left: 8px;
+  margin-right: 4%;
+  margin-left: 4%;
 }
 
-.slide-preview {
-  width: 68%;
-  padding-top: 38.25%;
+.slide-preview-container {
+  width: 84%;
+  margin-right: 3%;
   display: flex;
-  flex-direction: column;
-  padding: 18px;
-  border: 1px solid #ddd;
+  justify-content: center;
   border-radius: 4px;
   margin-bottom: 10px;
   cursor: pointer;
+  border: 1px solid #ccc;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.slide-preview.active {
+.slide-preview-container.active {
   border: 2px solid #3a92d5;
+}
+
+.slide-preview {
+  /* width and height follows a ppt 16:9 aspect ratio */
+  width: 100%;
+  padding-top: 56.25%; /* (9/16)*width-percentage(i.e. 100) */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
 }
 
 .thumbnail-preview {
@@ -78,13 +89,34 @@
   margin-bottom: 5px;
 }
 
+.thumbnail-title-box {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  font-size: 27px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+}
+
 .thumbnail-subtitle {
   font-size: 12px;
   color: #666;
 }
+
+.thumbnail-subtitle-box {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ccc;
+  font-size: 18px;
+  text-align: center;
+  color: #5c5c5c;
+  cursor: pointer;
+  outline: none;
+}
   
 .slide-editor {
-  width: 82%;
+  width: 81%;
   height: 100%;
   flex-grow: 1;
   display: flex;
