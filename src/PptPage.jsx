@@ -6,22 +6,22 @@ import "./css/PptPage.css";
 const PptPage = () => {
 
     const [currentSlide, setCurrentSlide] = useState(1);
-    const [slides, setSlides] = useState([{ title: "Click to add title", subtitle: "Click to add subtitle"}]);
+    const [slides, setSlides] = useState([{ title: "Click to add title", subtitle: "Click to add subtitle", titlePosition: {x: 537-680/2, y: 302-100/2 - 50}, subtitlePosition: {x: 537-680/2, y: 302-60/2 + 33}, titleSize: {width: 680, height: 100}, subtitleSize: {width: 680, height: 60} }]); // mid-point of slide in the editor canvas is approximately 537, 302
 
-    const handleTitleChange = (e) => {
+    const updateSlideProperty = (property, value) => {
         const updatedSlides = [...slides];
-        updatedSlides[currentSlide - 1].title = e.target.value;
+        updatedSlides[currentSlide - 1][property] = value;
         setSlides(updatedSlides);
     };
+    const handleTitleChange = (e) => updateSlideProperty('title', e.target.value);
+    const handleSubtitleChange = (e) => updateSlideProperty('subtitle', e.target.value);
+    const handleTitlePositionChange = (newPosition) => updateSlideProperty('titlePosition', newPosition);
+    const handleSubtitlePositionChange = (newPosition) => updateSlideProperty('subtitlePosition', newPosition);
+    const handleTitleSizeChange = (newSize) => updateSlideProperty('titleSize', newSize);
+    const handleSubtitleSizeChange = (newSize) => updateSlideProperty('subtitleSize', newSize);
     
-    const handleSubtitleChange = (e) => {
-        const updatedSlides = [...slides];
-        updatedSlides[currentSlide - 1].subtitle = e.target.value;
-        setSlides(updatedSlides);
-    };
-
     const addSlide = () => {
-        setSlides([...slides, { title: "Click to add title", subtitle: "Click to add subtitle" }]);
+        setSlides([...slides, { title: "Click to add title", subtitle: "Click to add subtitle", titlePosition: {x: 537-680/2, y: 302-100/2 - 50}, subtitlePosition: {x: 537-680/2, y: 302-60/2 + 33}, titleSize: {width: 680, height: 100}, subtitleSize: {width: 680, height: 60} }]);
     };
 
     const removeSlide = () => {
@@ -50,8 +50,8 @@ const PptPage = () => {
             let pptSlide = pptx.addSlide();
 
             // editor canvas size is approximately 1074x604
-            let exportTitlePosition = { x: (titlePosition.x/1074)*100+'%', y: (titlePosition.y/604)*100+'%' };
-            let exportSubtitlePosition = { x: (subtitlePosition.x/1074)*100+'%', y: (subtitlePosition.y/604)*100+'%' };
+            let exportTitlePosition = { x: (slide.titlePosition.x/1074)*100+'%', y: (slide.titlePosition.y/604)*100+'%' };
+            let exportSubtitlePosition = { x: (slide.subtitlePosition.x/1074)*100+'%', y: (slide.subtitlePosition.y/604)*100+'%' };
 
             // !!!!!!!!!!!! Made a mistake here, the calculated coordinate will actually be that of the input box's upper left corner, instead of that of the text inside
         
@@ -67,18 +67,13 @@ const PptPage = () => {
         console.log("Exported successfully");
     };
 
-    const [titlePosition, setTitlePosition] = useState({x: 537-680/2, y: 302-100/2 - 50}); // mid-point of slide in the editor canvas is approximately 537, 302
-    const [titleSize, setTitleSize] = useState({width: 680, height: 100});
-    const [subtitlePosition, setSubtitlePosition] = useState({x: 537-680/2, y: 302-60/2 + 33})
-    const [subtitleSize, setSubtitleSize] = useState({width: 680, height: 60});
-
     const renderPreview = (slide) => (
 
         <div className="slide-preview">
             <Rnd
                 className="draggableBlock"
-                position={{x: titlePosition.x / 5, y: titlePosition.y / 5}}
-                size={{width: titleSize.width / 4,  height: titleSize.height / 4}}
+                position={{x: slide.titlePosition.x / 5, y: slide.titlePosition.y / 5}}
+                size={{width: slide.titleSize.width / 4,  height: slide.titleSize.height / 4}}
                 bounds="parent"
                 disableDragging={true}
                 enableResizing={false}
@@ -93,8 +88,8 @@ const PptPage = () => {
 
             <Rnd
                 className="draggableBlock"
-                position={{x: subtitlePosition.x / 5, y: subtitlePosition.y / 5}}
-                size={{width: subtitleSize.width / 4, height: subtitleSize.height / 4}}
+                position={{x: slide.subtitlePosition.x / 5, y: slide.subtitlePosition.y / 5}}
+                size={{width: slide.subtitleSize.width / 4, height: slide.subtitleSize.height / 4}}
                 bounds="parent"
                 disableDragging={true}
                 enableResizing={false}
@@ -139,19 +134,15 @@ const PptPage = () => {
                 <div className="slide">
                     <Rnd
                         className="draggableBlock"
-                        default={{
-                            x: titlePosition.x,
-                            y: titlePosition.y,
-                            width: 680,
-                            height: 100,
-                        }}
+                        position={{x: slides[currentSlide - 1].titlePosition.x, y: slides[currentSlide - 1].titlePosition.y}}
+                        size={{width: slides[currentSlide - 1].titleSize.width, height: slides[currentSlide - 1].titleSize.height}}
                         minWidth={50}
                         minHeight={50}
                         bounds="parent"
                         enableUserSelectHack={false}
-                        onDragStop={(e, d) => {setTitlePosition({x: d.x, y:d.y})}}
+                        onDragStop={(e, d) => {handleTitlePositionChange({x: d.x, y:d.y})}}
                         onResizeStop={(e, direction, ref, delta, position) => {
-                            setTitleSize({width: parseFloat(ref.style.width), height: parseFloat(ref.style.height)});
+                            handleTitleSizeChange({width: parseFloat(ref.style.width), height: parseFloat(ref.style.height)});
                         }}
                     >
                         <input
@@ -164,19 +155,15 @@ const PptPage = () => {
 
                     <Rnd
                         className="draggableBlock"
-                        default={{
-                            x: subtitlePosition.x,
-                            y: subtitlePosition.y,
-                            width: 680,
-                            height: 60,
-                        }}
+                        position={{x: slides[currentSlide - 1].subtitlePosition.x, y: slides[currentSlide - 1].subtitlePosition.y}}
+                        size={{width: slides[currentSlide - 1].subtitleSize.width, height: slides[currentSlide - 1].subtitleSize.height}}
                         minWidth={50}
                         minHeight={50}
                         bounds="parent"
                         enableUserSelectHack={false}
-                        onDragStop={(e, d) => {setSubtitlePosition({x: d.x, y:d.y})}}
+                        onDragStop={(e, d) => {handleSubtitlePositionChange({x: d.x, y:d.y})}}
                         onResizeStop={(e, direction, ref, delta, position) => {
-                            setSubtitleSize({width: parseFloat(ref.style.width), height: parseFloat(ref.style.height)});
+                            handleSubtitleSizeChange({width: parseFloat(ref.style.width), height: parseFloat(ref.style.height)});
                         }}
                     >
                         <input
