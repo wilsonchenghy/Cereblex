@@ -10,6 +10,16 @@
   align-items: center;
 }
 
+.control-panel-return-button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+  height: 70%;
+  margin: 3px;
+  margin-left: 9px;
+  margin-right: 4px;
+}
+
 .control-panel-button {
   cursor: pointer;
   height: 70%;

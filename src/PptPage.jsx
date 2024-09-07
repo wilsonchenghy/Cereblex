@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PptxGenJS from "pptxgenjs";
 import { Rnd } from "react-rnd";
+import { useNavigate } from 'react-router-dom';
+import { ArrowExport20Filled } from '@fluentui/react-icons';
 import "./css/PptPage.css";
 
 const PptPage = () => {
@@ -28,18 +30,6 @@ const PptPage = () => {
         if (slides.length > 1) {
             setSlides(slides.filter((_, index) => index !== currentSlide - 1));
             setCurrentSlide(Math.max(currentSlide - 1, 1));
-        }
-    };
-
-    const prevSlide = () => {
-        if (currentSlide > 1) {
-            setCurrentSlide(currentSlide - 1);
-        }
-    };
-
-    const nextSlide = () => {
-        if (currentSlide < slides.length) {
-            setCurrentSlide(currentSlide + 1);
         }
     };
 
@@ -104,13 +94,19 @@ const PptPage = () => {
         </div>
     );
 
+    const navigate = useNavigate();
+    const navigateToMainPage = () => {
+        navigate('/');
+    }
+
     return (
     <div className="pptpage-container">
         <div className="control-panel">
+            <button onClick={navigateToMainPage} className="control-panel-return-button">
+                <ArrowExport20Filled/>
+            </button>
             <button className="control-panel-button" onClick={addSlide}>Add Slide</button>
             <button className="control-panel-button" onClick={removeSlide}>Remove Slide</button>
-            <button className="control-panel-button" onClick={prevSlide}>Previous</button>
-            <button className="control-panel-button" onClick={nextSlide}>Next</button>
 
             <button className="control-panel-button export-button" onClick={exportPpt}>Export</button>
         </div>
