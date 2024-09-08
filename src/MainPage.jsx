@@ -194,10 +194,34 @@ function MainPage() {
     }
   }
 
-  const generateIntelliNotesFromYouTube = async () => {
+  const generateIntelliNotesFromYouTube = async (inputURL) => {
     try {
       const response = await axios.post('http://localhost:5001/generateIntelliNotesFromYouTube', { inputURL });
+      console.log(response)
 
+      const generatedText = response.data.generated_text;
+      const newEntryId = response.data.new_entry_id;
+
+      setTopic(generatedText.topic);
+      setTopicDescription(generatedText.description);
+      setSubtopics(generatedText.subtopics);
+
+      setMultipleChoiceQuestion(generatedText.multiple_choice_question);
+      setMultipleChoiceOptions(generatedText.multiple_choice_options);
+      setMultipleChoiceCorrectAnswer(generatedText.multiple_choice_correct_answer);
+
+      setTopicImageDescription(generatedText.topic_image_search_prompt);
+      await fetchtopicImage(generatedText.topic_image_search_prompt, newEntryId);
+
+      setSubtopicImageDescription(generatedText.subtopic_image_search_prompts);
+      for (const prompt of generatedText.subtopic_image_search_prompts) {
+        await fetchsubtopicImage(prompt, newEntryId);
+      }
+  
+      fetchSidebarTopic();
+
+      setPrompt('');
+      setIsLoading(false);
     } catch (error) {
       console.error("There was an error generating the notes!", error);
       setIsLoading(false)
