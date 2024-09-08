@@ -4,10 +4,14 @@
 
 .control-panel {
   height: 5%;
+  min-height: 30px;
   border-bottom: 1px solid #ddd;
   padding: 1px;
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0px;
+  background-color: white;
 }
 
 .control-panel-return-button {
@@ -69,7 +73,7 @@
   cursor: pointer;
   border: 1px solid #ccc;
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .slide-preview-container.active {
@@ -124,7 +128,7 @@
   cursor: pointer;
   outline: none;
 }
-  
+
 .slide-editor {
   width: 81%;
   height: 100%;
