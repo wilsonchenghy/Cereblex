@@ -48,6 +48,20 @@
   border-right: 1px solid #ddd;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+}
+
+.slide-thumbnails-column::-webkit-scrollbar {
+  width: 5px; /* Set the width of the scrollbar */
+}
+
+.slide-thumbnails-column::-webkit-scrollbar-thumb {
+  background-color: #8d8d8d; /* Thumb's base color */
+  border-radius: 5px; /* Rounded edges */
+}
+
+.slide-thumbnails-column::-webkit-scrollbar-track {
+  background: #ffffff; /* Set the color of the scrollbar track */
 }
 
 .slide-thumbnail {
