@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@fluentui/react-icons": "^2.0.244",
-    "axios": "^1.7.2",
+    "axios": "^1.7.4",
     "core-js": "^3.23.3",
     "pptxgenjs": "^3.12.0",
     "react": "^18.2.0",
