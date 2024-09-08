@@ -124,7 +124,7 @@ body {
 }
 
 .IntelliNotesContainer {
-  border: 1px solid #DCDCDC;
+  border: 1px solid #dcdcdc;
   border-radius: 8px;
   width: 1000px;
   height: 750px;
@@ -135,8 +135,6 @@ body {
   align-items: center;
   overflow-y: auto;
 }
-
-
 
 .TopicSection {
   display: flex;
@@ -200,9 +198,7 @@ body {
   margin: 5;
 }
 
-
-
-.SectionTwo{
+.SectionTwo {
   display: flex;
   flex-direction: row;
   margin-bottom: 33px;
@@ -315,8 +311,6 @@ body {
   width: 115px;
   height: 37px;
 }
-
-
 
 .editSectionButtonContainer {
   display: flex;
