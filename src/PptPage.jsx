@@ -95,14 +95,11 @@ const PptPage = () => {
     );
 
     const navigate = useNavigate();
-    const navigateToMainPage = () => {
-        navigate('/');
-    }
 
     return (
     <div className="pptpage-container">
         <div className="control-panel">
-            <button onClick={navigateToMainPage} className="control-panel-return-button">
+            <button onClick={() => navigate('/')} className="control-panel-return-button">
                 <ArrowExport20Filled/>
             </button>
             <button className="control-panel-button" onClick={addSlide}>Add Slide</button>

@@ -210,10 +210,65 @@ def generateIntelliNotesFromYouTube():
     retriever = vector.as_retriever()
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
 
-    response = retrieval_chain.invoke({"input": "What is the video about, tell me about it in high details"})
-    print(response["answer"])
+    # response = retrieval_chain.invoke({"input": "What is the video about, tell me about it in high details"})
+    prompt_to_ai = """\
+    You specialize in writing wiki-like learning materials based on the given video. You are designed to output JSON.
+    First, generate the topic of the learning materials and the associated description of the topic.
+    Second, generate the subtopics and each of the content within the subtopics.
+    Generate as many subtopic as you want as long as it efficiently covers the topic.
+    In addition, I want to have some accompanying images, thus, generate the Google search prompt for the desired images for both the topic and the subtopics,
+    remember to be specific in the prompts and target getting high quality, clear (best to be 4k) and accurate image that can reflect what is on the learning material.
+    Lastly, strictly based on the content of the learning materials that you generated, also generate a multiple choice question with 4 options and the correct answer.
+    Return the JSON in this format:
+    {
+    "topic": "xxx",
+    "description": "xxx",
+    "topic_image_search_prompt": "xxx",
+    "subtopics": [
+        {
+        "title": "xxx",
+        "content": "xxx"
+        },
+        {
+        "title": "xxx",
+        "content": "xxx"
+        }
+    ],
+    "subtopic_image_search_prompts": ["xxx", "xxx"],
+    "multiple_choice_question": "xxx",
+    "multiple_choice_options": ["xxx", "xxx"],
+    "multiple_choice_correct_answer": "here remember to return the index from the multiple_choice_options array"
+    }
+    Each element in the subtopic_image_search_prompts array respectively corresponds to the subtopic in the subtopics array.
+    But remember, if you are given an academic question, you must include the solutions in the learning material too."""
+    response = retrieval_chain.invoke({"input": prompt_to_ai})
+    # print(response["answer"])
 
-    return jsonify({'summary': response["answer"]})
+    generated_text = json.loads(response["answer"])
+
+    newEntry = {
+        "topic": generated_text["topic"],
+        "description": generated_text["description"],
+        "topic_image_search_prompt": generated_text["topic_image_search_prompt"],
+        "subtopics": generated_text["subtopics"],
+        "subtopic_image_search_prompts": generated_text["subtopic_image_search_prompts"],
+        "multiple_choice_question": generated_text["multiple_choice_question"],
+        "multiple_choice_options": generated_text["multiple_choice_options"],
+        "multiple_choice_correct_answer": generated_text["multiple_choice_correct_answer"]
+    }
+
+    # Store JSON output from gpt to mongodb database
+    new_entry_id = addNewEntryToDB(newEntry)
+    new_entry_id = str(new_entry_id)
+
+    result = {
+        "generated_text": generated_text,
+        "new_entry_id": new_entry_id
+    }
+    print(result)
+
+    # return jsonify({'summary': "hi"})
+    return jsonify(result), 200
 
 if __name__ == '__main__':
     app.run(port=5001, debug=True)
