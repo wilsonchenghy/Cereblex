@@ -8,6 +8,7 @@ import UserTab from './UserTab';
 import  Sidebar from './Sidebar';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { InlineMath, BlockMath } from 'react-katex';
 
 function MainPage() {
   const [prompt, setPrompt] = useState('');
@@ -303,6 +304,9 @@ function MainPage() {
   const Highlight = ({ children }) => {
     return <span style={{ backgroundColor: 'yellow'}}>{children}</span>;
   };
+  const LatexRender = ({ children }) => {
+    return <BlockMath math={children} />
+  }
   
 
   return (
@@ -321,7 +325,7 @@ function MainPage() {
             <div className='mainPageContentContainer'>
                 <div className='IntelliNotesContainer'>
                   <div style={{fontSize: "16.5px"}}>
-                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{code: Highlight, }}>{returnTestingContent}</ReactMarkdown>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{em: Highlight, code: LatexRender, }}>{returnTestingContent}</ReactMarkdown>
                   </div>
                   <div style={{margin:'100px'}}></div>
                   <div className='TopicSection'>

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainPage from './MainPage';
 import PptPage from './PptPage';
 import FlashcardPage from './FlashcardPage';
+import 'katex/dist/katex.min.css';
 
 function App() {
   return (

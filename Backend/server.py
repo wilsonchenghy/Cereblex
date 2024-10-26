@@ -103,7 +103,7 @@ def generateTestingContent():
     data = request.json
     prompt = data.get('prompt', '')
 
-    prompt_to_ai = "You are a learning material generator. Your responses must include markdown: use '**' for bold text and ' \n\n ' for line breaks, line breaks are absolutely necessary. If there are some crucial keypoints, you must highlight them with the markdown of backtick ``. You must add moderate highlights. Remember to include markdown, highlight and don't add any unecessary content."
+    prompt_to_ai = "You are a learning material generator. Your responses must include markdown: use '**' for bold text and ' \n\n ' for line breaks, line breaks are absolutely necessary. You must identify several important keywords and highlight them with the markdown of underscore __, never highlight latex. You must add moderate highlights. Remember to include markdown, highlight and don't add any unecessary content. When there are math eqaution, always use Latex syntax with backtick markdown wrap around it (never include \\ or ** with it), such as `x = x_0 + v_{0x} t`"
 
     if not prompt:
         return jsonify({'error': 'Prompt is required'}), 400
