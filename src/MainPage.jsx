@@ -6,6 +6,8 @@ import StartingPage from './StartingPage';
 import LoadingScreen from './LoadingScreen';
 import UserTab from './UserTab';
 import  Sidebar from './Sidebar';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 function MainPage() {
   const [prompt, setPrompt] = useState('');
@@ -149,15 +151,40 @@ function MainPage() {
     setPrompt(e.target.value);
   };
 
+  const testMode = true;
+  const [returnTestingContent, setReturnTestingContent] = useState('')
+
   const handleSubmit = (e) => {
     setIsLoading(true);
     e.preventDefault();
-    if (isImportURLMode) {
-      generateIntelliNotesFromYouTube(prompt)
-    } else {
-      generateIntelliNotes(prompt);
+    if (testMode) {
+      generateTestingContent();
     }
+    // if (isImportURLMode) {
+    //   generateIntelliNotesFromYouTube(prompt)
+    // } else {
+    //   generateIntelliNotes(prompt);
+    // }
   };
+
+  const generateTestingContent = async() => {
+    try {
+      const response = await axios.post('http://localhost:5001/generateTestingContent', { prompt });
+
+      const generatedText = response.data.generated_text;
+
+      console.log(generatedText);
+
+      setReturnTestingContent(generatedText);
+  
+      setPrompt('');
+      setIsLoading(false);
+      setIsStartingPage(false);
+    } catch (error) {
+      console.error("There was an error generating the notes!", error);
+      setIsLoading(false);
+    }
+  }
 
   const generateIntelliNotes = async () => {
     try {
@@ -272,6 +299,10 @@ function MainPage() {
       // console.log("You are incorrect")
     }
   }
+
+  const Highlight = ({ children }) => {
+    return <span style={{ backgroundColor: 'yellow'}}>{children}</span>;
+  };
   
 
   return (
@@ -289,6 +320,10 @@ function MainPage() {
           ) : (
             <div className='mainPageContentContainer'>
                 <div className='IntelliNotesContainer'>
+                  <div style={{fontSize: "16.5px"}}>
+                    <ReactMarkdown remarkPlugins={[remarkGfm]} components={{code: Highlight, }}>{returnTestingContent}</ReactMarkdown>
+                  </div>
+                  <div style={{margin:'100px'}}></div>
                   <div className='TopicSection'>
                     <div className='HeadingContainer'>
                       <h1 className='heading'>{topic}</h1>

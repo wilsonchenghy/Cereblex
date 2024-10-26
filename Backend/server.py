@@ -98,6 +98,43 @@ def addNewEntryToDB(newJSONEntry):
     newly_stored_entry = collection.insert_one(newJSONEntry)
     return newly_stored_entry.inserted_id
 
+@app.route('/generateTestingContent', methods=['POST'])
+def generateTestingContent():
+    data = request.json
+    prompt = data.get('prompt', '')
+
+    prompt_to_ai = "You are a learning material generator. Your responses must include markdown: use '**' for bold text and ' \n\n ' for line breaks, line breaks are absolutely necessary. If there are some crucial keypoints, you must highlight them with the markdown of backtick ``. You must add moderate highlights. Remember to include markdown, highlight and don't add any unecessary content."
+
+    if not prompt:
+        return jsonify({'error': 'Prompt is required'}), 400
+    
+    try:
+        client = openai.OpenAI()
+
+        response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "system",
+                "content": prompt_to_ai
+            },
+            {"role": "user", "content": prompt}
+        ]
+        )
+
+        generated_text = response.choices[0].message.content
+        print(generated_text)
+
+        result = {
+            "generated_text": generated_text,
+        }
+
+        return jsonify(result), 200
+    
+    except Exception as e:
+        print(e)
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/generateIntelliNotes', methods=['POST'])
 def generateIntelliNotes():
     data = request.json
