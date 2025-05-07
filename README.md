@@ -1,9 +1,23 @@
 # Cereblex
- 
-# Getting Started
-1. Run ``` npm install ```
-2. Run ``` npm run dev ```
-3. Open another terminal and ``` cd Backend ```, followed by ``` python3 server.py ``` to start the backend server
 
-# Setting up MongoDB Database
-1. 
+Generate high-quality learning notes, PPT, learning flashcard
+
+![](https://github.com/wilsonchenghy/Cereblex/blob/main/Cereblex.jpeg)
+
+## 🚀 Getting Started
+
+### 📦 Frontend Setup
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+### 📦 Backend Setup
+
+```bash
+cd Backend
+python3 server.py
+```
